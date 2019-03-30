@@ -1,26 +1,6 @@
 import expenses from '../../selectors/expenses'
 import moment from 'moment';
-
-const expense = [
-    {
-    description:"Movie",
-    note:"badla",
-    amount:313,
-    createdAt:moment(0).subtract(5, 'days').valueOf()
-},
-{
-    description:"Fuel",
-    note:"petrol",
-    amount:300,
-    createdAt:moment(0).add(4,'days').valueOf()
-},
-{
-    description:"Food",
-    note:"dosa",
-    amount:114,
-    createdAt:0
-}
-]
+import expense from '../fixtures/expenses'
 
 test('should filter expense by startDate', () => {
     const filters = {
@@ -30,8 +10,31 @@ test('should filter expense by startDate', () => {
         endDate:undefined
     }
     const result = expenses(expense, filters)
-expect(result).toEqual(expense[1], expense[2])   
+expect(result).toEqual([expense[1], expense[2]])   
 })
+
+test('should filter expense by endDate', () => {
+    const filters = {
+        text:'',
+        sortBy:'date',
+        startDate:undefined,
+        endDate:moment(0)
+    }
+    const result = expenses(expense, filters)
+expect(result).toEqual([expense[2], expense[0]])   
+})
+
+test('should filter expense by startDate and endDate', () => {
+    const filters = {
+        text:'',
+        sortBy:'date',
+        startDate:moment(0),
+        endDate:moment(0).add(7, 'days')
+    }
+    const result = expenses(expense, filters)
+expect(result).toEqual([expense[1], expense[2]])   
+})
+
 
 test("should filter expenses by text value", () => {
 const filters = {
@@ -43,4 +46,16 @@ const filters = {
 const result = expenses(expense, filters)
 expect(result).toEqual([expense[1],expense[0]])
 })
+
+test("should filter expenses by amount value", () => {
+    const filters = {
+        text:'',
+        sortBy:'amount',
+        startDate:undefined,
+        endDate:undefined
+    }
+    const result = expenses(expense, filters)
+    expect(result).toEqual([expense[0],expense[1], expense[2]])
+    })
+    
 
